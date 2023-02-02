@@ -1,0 +1,25 @@
+--- a/src/Makefile	2021-07-15 09:01:52.000000000 -0500
++++ b/src/Makefile	2023-02-02 10:42:23.988056572 -0600
+@@ -6,10 +6,10 @@
+ # Your platform. See PLATS for possible values.
+ PLAT= guess
+
+-CC= gcc -std=gnu99
+-CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS)
++CC= clang --target=wasm32-wasi
++CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS) -g -D_WASI_EMULATED_GETPID -D_WASI_EMULATED_SIGNAL -D_WASI_EMULATED_PROCESS_CLOCKS -I{{WASI_ROOT}}/include -isystem {{WASI_ROOT}}/include
+ LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
+-LIBS= -lm $(SYSLIBS) $(MYLIBS)
++LIBS= -L{{WASI_SDK_PATH}}/share/wasi-sysroot/lib/wasm32-wasi -lm $(SYSLIBS) $(MYLIBS) -L{{WASI_ROOT}}/lib -lwasix -lwasi_vfs -lwasi-emulated-signal -lc
+
+ AR= ar rcu
+ RANLIB= ranlib
+@@ -23,7 +23,7 @@
+ MYCFLAGS=
+ MYLDFLAGS=
+ MYLIBS=
+-MYOBJS=
++MYOBJS={{PROJECT_DIR}}/patches/setjmp.o
+
+ # Special flags for compiler modules; -Os reduces code size.
+ CMCFLAGS=
