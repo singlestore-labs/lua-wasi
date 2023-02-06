@@ -57,7 +57,7 @@ static int initialize()
     luaL_openlibs(LuaState);
 
     // Add library paths
-    const char *c = "package.path = package.path .. ';/lib/?.lua;/app/?.lua'";
+    const char *c = "package.path = package.path .. ';/app/?.lua'";
     if (luaL_dostring(LuaState, c) == LUA_OK)
     {
         lua_pop(LuaState, lua_gettop(LuaState));
